@@ -27,8 +27,8 @@ app.use(cors({
     const allowedOrigins = [
       "http://localhost:3000",
       "http://localhost:5173",
-    //   "https://online-exam-front.vercel.app",
-    //   "https://online-exam-lemon.vercel.app" // Swagger deployed
+      "https://medical-lap-nine.vercel.app",
+      "https://medical-lab-api.vercel.app" // Swagger deployed
     ];
     if (!allowedOrigins.includes(origin)) {
       return callback(new Error(`CORS policy: origin ${origin} not allowed`), false);
@@ -39,6 +39,7 @@ app.use(cors({
   allowedHeaders: ["Content-Type","Authorization"],
   methods: ["GET","POST","PATCH","DELETE","OPTIONS","PUT"]
 }));
+
 app.use(express.urlencoded({ extended: true })); // optional, parses form data
 
 
