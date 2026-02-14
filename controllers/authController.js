@@ -60,44 +60,44 @@ export const login = async (req, res) => {
 
 
 export const forgotPassword = async (req, res) => {
-  try {
-    const { email } = req.body;
-    if (!email) return res.status(400).json({ message: "Email is required" });
+    try {
+        const { email } = req.body;
+        if (!email) return res.status(400).json({ message: "Email is required" });
 
-    const staff = await Doctor.findOne({ email }) || await Assistant.findOne({ email });
-    if (!staff) {
-      return res.status(404).json({ message: "Email is not connected to any account" });
-    }
+        const staff = await Doctor.findOne({ email }) || await Assistant.findOne({ email });
+        if (!staff) {
+            return res.status(404).json({ message: "Email is not connected to any account" });
+        }
 
-    // Generate reset token
-    const resetToken = randomBytes(32).toString("hex");
-    staff.resetPasswordToken = createHash("sha256").update(resetToken).digest("hex");
-    staff.resetPasswordExpire = Date.now() + 10 * 60 * 1000; // 10 minutes
+        // Generate reset token
+        const resetToken = randomBytes(32).toString("hex");
+        staff.resetPasswordToken = createHash("sha256").update(resetToken).digest("hex");
+        staff.resetPasswordExpire = Date.now() + 10 * 60 * 1000; // 10 minutes
 
-    await staff.save();
+        await staff.save();
 
-    const resetUrl = `${process.env.FRONT_URL}/reset-password/${resetToken}`;
+        const resetUrl = `${process.env.FRONT_URL}/reset-password/${resetToken}`;
 
-    await sendEmail({
-      to: staff.email,
-      subject: "اعد ضبط كلمة المرور",
-      html: `
+        await sendEmail({
+            to: staff.email,
+            subject: "اعد ضبط كلمة المرور",
+            html: `
         <h2>اعاده ضبط كلمة المرور</h2>
         <p>اضغط على الرابط بالاسفل لاعاده تعيين كلمة المرور:</p>
         <a href="${resetUrl}">${resetUrl}</a>
         <p>سيتم تعطيل الرابط خلال 10 دقائق.</p>
       `,
-    });
+        });
 
-    res.json({
-      message: "If this email exists, a reset link has been sent",
-      token: resetToken // only for testing, remove in production
-    });
+        res.json({
+            message: "If this email exists, a reset link has been sent",
+            token: resetToken // only for testing, remove in production
+        });
 
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: "Server error", error: error.message });
-  }
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: "Server error", error: error.message });
+    }
 };
 
 

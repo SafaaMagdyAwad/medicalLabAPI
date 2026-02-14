@@ -1,5 +1,6 @@
 import { Booking } from "../moules/bookings.js";
 import { MedicalTests } from "../moules/MeidcalTests.js";
+import {  User } from "../moules/Users.js";
 import { generateBookingCode } from "../utils/generateBookingCode.js";
 import { validateId } from "../utils/validateId.js";
 
@@ -147,7 +148,9 @@ export const updateBooking = async (req, res) => {
 
         const updateData = req.body;
         console.log(updateData);
-
+        if (req.body.results) {
+            res.status(300).json("not allowed to update the result")
+        }
         // Update amountRemaining if amountPaid or totalPrice changes
         if (updateData.amountPaid !== undefined || updateData.totalPrice !== undefined) {
             const existing = await Booking.findById(id);
@@ -160,6 +163,30 @@ export const updateBooking = async (req, res) => {
 
         const booking = await Booking.findByIdAndUpdate(id, updateData, { new: true });
         if (!booking) return res.status(404).json({ message: "Booking not found" });
+
+        res.status(200).json({ message: "Booking updated successfully", booking });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: "Server error", error: error.message });
+    }
+};
+// ================= Results =================
+export const AddReult = async (req, res) => {
+    try {
+        const { id } = req.params;
+        validateId(res, id);
+        const results = req.body.results;
+
+        const doctorId = req.user.id;
+        const booking = await Booking.findByIdAndUpdate(id, { results, doctorId }, { new: true });
+        const patientId=booking.patientId;
+        console.log(patientId, "patientId");
+
+        if (!booking) return res.status(404).json({ message: "Booking not found" });
+        //send sms to the patient number
+        const patient = await User.findById(patientId);
+        // const patientmobile=patient.mobile;
+        console.log(patient, "patient");
 
         res.status(200).json({ message: "Booking updated successfully", booking });
     } catch (error) {

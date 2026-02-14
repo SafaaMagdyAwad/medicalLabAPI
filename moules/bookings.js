@@ -1,17 +1,17 @@
 import mongoose from "mongoose";
-import { Patient, Doctor } from "./Users.js";
+import { User } from "./Users.js";
 import { MedicalTests } from "./MeidcalTests.js";
 const bookingSchema = new mongoose.Schema(
     {
 
         patientId: {
             type: mongoose.Schema.Types.ObjectId,
-            ref: "Patient",
+            ref: "User",
             required: true,
         },
         doctorId: {
             type: mongoose.Schema.Types.ObjectId,
-            ref: "Doctor",
+            ref: "User",
         },
         medicalTests: [
             {

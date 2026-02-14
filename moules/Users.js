@@ -63,7 +63,7 @@ const StaffSchema = new mongoose.Schema({
 /* ================= Hash Password Middleware ================= */
 StaffSchema.pre("save", async function () {
   if (!this.isModified("password")) return;
-
+  if (this.role) this.role = this.role.toLowerCase();
   const salt = await bcrypt.genSalt(10);
   this.password = await bcrypt.hash(this.password, salt);
 });
@@ -74,24 +74,28 @@ StaffSchema.methods.comparePassword = async function (enteredPassword) {
   return await bcrypt.compare(enteredPassword, this.password);
 };
 
+const PatientSchema = new mongoose.Schema({
+  email: {
+    type: String,
+    required: false,
+    unique: true,
+  },
+});
+PatientSchema.pre("save", function () {
+  if (this.role) this.role = this.role.toLowerCase();
+});
+
+
 /* ================= Doctor Model ================= */
 const Doctor = User.discriminator("Doctor", StaffSchema);
 const Assistant = User.discriminator("Assistant", StaffSchema);
-
-/* ================= Patient ================= */
-
-const Patient = User.discriminator(
-  "Patient",
-  new mongoose.Schema({
-    email: {
-      type: String,
-      required: false,
-      unique: true,
-    },
-  })
-);
+const Patient = User.discriminator("Patient", PatientSchema);
 
 
 
 
 export { User, Doctor, Patient, Assistant };
+
+
+
+// the role somtimes Doctor , doctor   why

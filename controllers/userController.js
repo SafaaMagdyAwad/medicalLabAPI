@@ -1,4 +1,4 @@
-import { Doctor, Patient } from "../moules/Users.js";
+import { Doctor, Patient, User } from "../moules/Users.js";
 
 
 export const getMyProfile = async (req, res) => {
@@ -26,12 +26,12 @@ export const createPatient = async (req, res) => {
 
 
 export const getDoctors = async (req, res) => {
-  const doctors = await Doctor.find();
+  const doctors = await User.find({role:"doctor"});
   res.json(doctors);
 };
 
 
 export const getPatients = async (req, res) => {
-  const patients = await Patient.find();
+  const patients = await User.find({role:"patient"});
   res.json(patients);
 };

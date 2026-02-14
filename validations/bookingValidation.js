@@ -38,10 +38,6 @@ export const updateBookingValidation = Joi.object({
         .messages({
             "any.invalid": "patientId must be a valid MongoDB ObjectId"
         }),
-    doctorId: Joi.string().custom(objectId, "ObjectId validation").optional()
-        .messages({
-            "any.invalid": "doctorId must be a valid MongoDB ObjectId"
-        }),
     medicalTests: Joi.array().items(
         Joi.string().custom(objectId, "ObjectId validation").optional()
             .messages({
@@ -53,6 +49,13 @@ export const updateBookingValidation = Joi.object({
     bookingCode: Joi.string().optional(),
     totalPrice: Joi.number().min(0).optional(),
     amountPaid: Joi.number().min(0).optional(),
+});
+export const ResultValidation = Joi.object({
+
+    doctorId: Joi.string().custom(objectId, "ObjectId validation").optional()
+        .messages({
+            "any.invalid": "doctorId must be a valid MongoDB ObjectId"
+        }),
     results: Joi.array().items(
         Joi.object({
             testId: Joi.string().required(),

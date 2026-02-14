@@ -34,10 +34,10 @@ export const StuffRegisterValidation = Joi.object({
   ...baseUserFields,
   password: passwordSchema,
   role: Joi.string()
-    .valid("doctor")
+    .valid("doctor","assistant")
     .required()
     .messages({
-      "any.only": "Role must be doctor",
+      "any.only": "Role must be doctor or assistant",
       "string.empty": "Role is required",
     }),
 }).options({ allowUnknown: false });
