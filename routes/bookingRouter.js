@@ -1,6 +1,5 @@
 import express from "express";
 import {
-  AddReult,
   createBooking,
   deleteBooking,
   getAllBookings,
@@ -220,29 +219,6 @@ bookingRouter.get("/code/:code", getBookingByCode);
  */
 bookingRouter.put("/:id", authStuff, validate(updateBookingValidation), updateBooking);
 
-/**
- * @swagger
- * /api/bookings/{id}/results:
- *   put:
- *     summary: Replace all booking results (doctor only)
- *     tags: [Bookings]
- *     parameters:
- *       - in: path
- *         name: id
- *         required: true
- *         schema:
- *           type: string
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             $ref: "#/components/schemas/AddResultsRequest"
- *     responses:
- *       200:
- *         description: Results replaced successfully
- */
-bookingRouter.put("/:id/results", authDoctor, validate(ResultValidation), AddReult);
 
 /**
  * @swagger

@@ -2,6 +2,7 @@ import express from 'express';
 import mongoose from 'mongoose';
 import cors from 'cors';
 import dotenv from 'dotenv';
+import twilio from 'twilio';
 
 // import routes
 import userRouter from './routes/userRouter.js';
@@ -10,6 +11,7 @@ import swaggerSpec from "./config/swagger.js";
 import authRouter from './routes/authRoutes.js';
 import medicalTestRouter from './routes/MedicalTestRouter.js';
 import bookingRouter from './routes/bookingRouter.js';
+import resultRouter from './routes/resultRouter.js';
 const CSS_URL = "https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/4.15.5/swagger-ui.min.css";
 
 
@@ -51,6 +53,7 @@ app.use("/api/auth",authRouter)
 app.use("/api/users",userRouter)
 app.use("/api/medical-tests",medicalTestRouter)
 app.use("/api/bookings",bookingRouter)
+app.use("/api/results",resultRouter)
 
 app.use(
   "/api-docs",
@@ -63,6 +66,12 @@ app.use(
     ],
   })
 );
+// Twilio credentials from Twilio console
+const accountSid = process.env.TWILIO_ACCOUNT_SID;
+const authToken = process.env.TWILIO_AUTH_TOKEN;
+const twilioNumber = process.env.TWILIO_NUMBER;
+
+const client = twilio(accountSid, authToken);
 // MongoDB connection
 const uri = process.env.MONGO_URI;
 mongoose.connect(uri)
