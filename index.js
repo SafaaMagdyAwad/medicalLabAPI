@@ -28,7 +28,7 @@ app.use(cors({
     if (!origin) return callback(null, true); // allow Postman
     const allowedOrigins = [
       "http://localhost:3000",
-      "http://localhost:5173",
+      "http://localhost:5174",
       "https://medical-lap-nine.vercel.app",
       "https://medical-lab-api.vercel.app" // Swagger deployed
     ];
